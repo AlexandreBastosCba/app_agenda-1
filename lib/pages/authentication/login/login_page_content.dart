@@ -74,7 +74,9 @@ class _LoginPageContentState extends State<LoginPageContent> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         if (await usersServices.signIn(
-                            _cpf.text, DateFormat("dd/MM/yyyy").parse(_birthday.text))) {
+                          _cpf.text,
+                          DateFormat("dd/MM/yyyy").parse(_birthday.text),
+                        )) {
                           // ignore: use_build_context_synchronously
                           ViewUtils.instance.safeSignIn(context);
                         } else {
