@@ -1,5 +1,7 @@
 import 'package:app_agenda/models/contact/contact.dart';
 import 'package:app_agenda/models/contact/contact_service.dart';
+import 'package:app_agenda/pages/contact/contact_detail.dart';
+import 'package:app_agenda/pages/main/main_page.dart';
 import 'package:app_agenda/util/responsive/responsive.dart';
 import 'package:app_agenda/util/styles/cs_text_styles.dart';
 import 'package:app_agenda/util/widgets/actions/cs_search_bar.dart';
@@ -113,30 +115,33 @@ class _ContactSearchState extends State<ContactSearch> {
               }
 
               final contacts = snapshot.data!;
-              return Container(
-                height: contacts.length * 70.0,
-                margin: const EdgeInsets.only(top: 20),
-                child: ListView.separated(
-                  itemCount: contacts.length,
-                  separatorBuilder: (context, index) =>
-                      Divider(color: Colors.grey[300]), // Linha divisória cinza
-                  itemBuilder: (context, index) {
-                    final contact = contacts[index];
+              return ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: contacts.length,
+                separatorBuilder: (context, index) =>
+                    Divider(color: Colors.grey[300]), // Linha divisória cinza
+                itemBuilder: (context, index) {
+                  final contact = contacts[index];
 
-                    return ListTile(
-                      title: Text(contact.nome ?? 'Erro ao carregar nome!',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 16)),
-                      // subtitle:
-                      //     Text(contact.phone ?? 'Erro ao carregar telefone'),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 10),
-                      onTap: () {
-
-                      },
-                    );
-                  },
-                ),
+                  return ListTile(
+                    title: Text(contact.nome ?? 'Erro ao carregar nome!',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 16)),
+                    // subtitle:
+                    //     Text(contact.phone ?? 'Erro ao carregar telefone'),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                    onTap: () {
+                      //Navega para a tela de detalhes do contato
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MainPage(
+                          selectedPage: ContactDetail(contact: contact),
+                        ),
+                      ));
+                    },
+                  );
+                },
               );
             },
           ),
