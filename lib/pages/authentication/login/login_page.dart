@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final double _desktopContainerWidth = 560;
+  final double _desktopContainerWidth = 580;
   late final double _desktopContainerHeight = _desktopContainerWidth * 1.00;
 
   @override

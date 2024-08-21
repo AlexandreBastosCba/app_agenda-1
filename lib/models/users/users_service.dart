@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:app_agenda/util/api/api_utils.dart';
+import 'package:http/http.dart' as http;
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:app_agenda/models/users/users.dart';
@@ -45,32 +46,35 @@ class UsersServices extends ChangeNotifier {
   }
 
   Future<bool> _verificarNaApiSeHaUsuarioComCrendenciaisInformadas(
-    String cpf,
-    DateTime birthday,
-  ) async {
-    // return true;
-    cpf = cpf.replaceAll(RegExp(r'\D+'), '');
-    Uri loginUri = ApiUtils.createLoginUri(cpf);
+      String cpf, DateTime birthday) async {
+    // Formata o CPF para remover caracteres especiais
+    String cpfFormatado = cpf.replaceAll(RegExp(r'[^0-9]'), '');
 
-    try {
-      // final response =
-      //     await http.get(Uri.parse('${ApiUtils.baseUrl}/Contatos/Auth'));
-      final response = await http.post(loginUri);
+    final uri = Uri.parse('${await ApiUtils.baseUrl}/Auth/Login?cpf=$cpfFormatado');
 
-      if (response.statusCode == 200) {
-        String apiBodyResponse = response.body;
+    // Realiza a solicitação POST
+    final response = await http.post(
+      uri,
+      headers: {'Accept': 'application/json'},
+      body: '', // Envia o corpo da solicitação vazio
+    );
 
-        if (apiBodyResponse == 'Autorizado') {
-          return Future.value(true);
-        } else {
-          return Future.value(false);
-        }
+    // Verifica a resposta
+    if (response.statusCode == 200) {
+      final responseBody =
+          response.body.trim(); // Remove espaços em branco desnecessários
+      if (responseBody == '"Autorizado"') {
+        return Future.value(true); // Usuário autorizado
+      } else if (responseBody == '"Negado"') {
+        return Future.value(false); // Usuário não autorizado
       } else {
-        throw Exception('Erro ao carregar contatos');
+        debugPrint('Resposta inesperada: $responseBody');
+        throw Exception('Erro ao verificar credenciais');
       }
-    } catch (e) {
-      debugPrint(e.toString());
-      throw Exception('Erro ao tentar fazer login');
+    } else {
+      // Trata os erros
+      debugPrint('Falha na solicitação: ${response.statusCode}');
+      throw Exception('Erro ao verificar credenciais');
     }
   }
 
@@ -128,9 +132,10 @@ class UsersServices extends ChangeNotifier {
   static String? validateCpf(String? cpf) {
     if (cpf == null || cpf.isEmpty) {
       return 'Por favor, insira um CPF válido.';
-    } else if (!CPFValidator.isValid(cpf)) {
-      return 'CPF inválido';
-    }
+    } 
+    // else if (!CPFValidator.isValid(cpf)) {
+    //   return 'CPF inválido';
+    // }
     return null;
   }
 

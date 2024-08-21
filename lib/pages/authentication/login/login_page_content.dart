@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class LoginPageContent extends StatefulWidget {
-  static const double width = 350;
+  static const double width = 360;
   static const double height = width * 1.00;
 
   const LoginPageContent({super.key});
