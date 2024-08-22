@@ -45,9 +45,9 @@ class _LoginPageContentState extends State<LoginPageContent> {
           children: [
             // SvgPicture.asset('/images/logos/main/main_logo.svg', width: LoginPageContent.width),
             Text(
-              'Bem-Vindo de Volta!',
+              'Agenda',
               textAlign: TextAlign.center,
-              style: CSTextSyles.decoratedTitle(context),
+              style: CSTextSyles.largeTitle(context),
             ),
             Form(
               key: _formKey,
@@ -56,6 +56,7 @@ class _LoginPageContentState extends State<LoginPageContent> {
                   CSTextFormField(
                     controller: _cpf,
                     labelText: 'CPF',
+                    hintText: '123.456.789-00',
                     keyboardType: TextInputType.number,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
@@ -73,8 +74,8 @@ class _LoginPageContentState extends State<LoginPageContent> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        if (await usersServices.signIn(
-                            _cpf.text, DateFormat("dd/MM/yyyy").parse(_birthday.text))) {
+                        if (await usersServices.signIn(_cpf.text,
+                            DateFormat("dd/MM/yyyy").parse(_birthday.text))) {
                           // ignore: use_build_context_synchronously
                           ViewUtils.instance.safeSignIn(context);
                         } else {
@@ -89,7 +90,7 @@ class _LoginPageContentState extends State<LoginPageContent> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: CSColors.primarySwatchV2.color,
+                      backgroundColor: CSColors.appGreen.color,
                     ),
                     child: const Text('Entrar'),
                   ),

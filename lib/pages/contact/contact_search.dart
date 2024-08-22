@@ -123,11 +123,42 @@ class _ContactSearchState extends State<ContactSearch> {
                     Divider(color: Colors.grey[300]), // Linha divisória cinza
                 itemBuilder: (context, index) {
                   final contact = contacts[index];
-
                   return ListTile(
-                    title: Text(contact.nome ?? 'Erro ao carregar nome!',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 16)),
+                    title: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Nome: ${contact.nome}",
+                                  // style: const TextStyle(
+                                  //   fontWeight: FontWeight.w700,
+                                  //   fontSize: 16,
+                                  // ),
+                                  style: CSTextSyles.alertText(context),
+                                ),
+                                Text(
+                                  "(${contact.telefone.substring(0, 2)}) ${contact.telefone.substring(2, 7)}-${contact.telefone.substring(7, 11)}",
+                                  style: CSTextSyles.alertText(context),
+                                ),
+                                Text(
+                                  "Lotação: ${contact.departamento}",
+                                  style: CSTextSyles.alertText(context),
+                                ),
+                              ],
+                            ),
+                            const Icon(
+                              Icons.account_box_sharp,
+                              color: Color.fromARGB(255, 40, 110, 52),
+                              size: 100,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                     // subtitle:
                     //     Text(contact.phone ?? 'Erro ao carregar telefone'),
                     contentPadding:

@@ -22,6 +22,7 @@ enum CSColors {
   warning(Color(0xFFFFA42B)),
   hint(Color(0x00000000)),
   indicator(Color(0xAA8AB4F8)),
+  appGreen(Color(0xFF286E34)),
 
   //Outros
   animatedBorder(Color(0xFF1D1D1D)),
@@ -38,4 +39,3 @@ enum CSColors {
 
   Color get hex => color;
 }
-
