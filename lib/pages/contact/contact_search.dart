@@ -3,6 +3,7 @@ import 'package:app_agenda/models/contact/contact_service.dart';
 import 'package:app_agenda/pages/contact/contact_detail.dart';
 import 'package:app_agenda/pages/main/main_page.dart';
 import 'package:app_agenda/util/responsive/responsive.dart';
+import 'package:app_agenda/util/styles/cs_colors.dart';
 import 'package:app_agenda/util/styles/cs_text_styles.dart';
 import 'package:app_agenda/util/widgets/actions/cs_search_bar.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _ContactSearchState extends State<ContactSearch> {
     // Filtra os contatos que contêm a substring fornecida no nome
     List<Contact> filteredContacts = contacts.where((contact) {
       // Converte o nome para minúsculas e verifica se a substring está presente
-      return contact.nome!.toLowerCase().contains(query.toLowerCase());
+      return contact.nome.toLowerCase().contains(query.toLowerCase());
     }).toList();
 
     // Atualiza a variável com a lista filtrada
@@ -150,9 +151,9 @@ class _ContactSearchState extends State<ContactSearch> {
                                 ),
                               ],
                             ),
-                            const Icon(
+                            Icon(
                               Icons.account_box_sharp,
-                              color: Color.fromARGB(255, 40, 110, 52),
+                              color: CSColors.appGreen.color,
                               size: 100,
                             ),
                           ],
