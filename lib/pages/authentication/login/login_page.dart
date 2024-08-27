@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
                 CSColors.background.color,
                 CSColors.background.color,
                 CSColors.lightBackground.color,
-              ], 
+              ],
             ),
           ),
           child: SingleChildScrollView(
@@ -38,21 +38,21 @@ class _LoginPageState extends State<LoginPage> {
               height: _desktopContainerHeight,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color:  CSColors.lightBackground.color,
+                color: CSColors.lightBackground.color,
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
               ),
-              child: const LoginPageContent()
+              child: const LoginPageContent(),
             ),
           ),
         ),
         mobile: Container(
-          color:  CSColors.lightBackground.color,
+          color: CSColors.lightBackground.color,
           alignment: Alignment.center,
           child: SingleChildScrollView(
             child: Container(
               alignment: Alignment.center,
               padding: const EdgeInsets.all(30),
-              child: const LoginPageContent()
+              child: const LoginPageContent(),
             ),
           ),
         ),
@@ -60,4 +60,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-

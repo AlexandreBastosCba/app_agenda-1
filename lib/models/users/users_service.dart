@@ -39,30 +39,31 @@ class UsersServices extends ChangeNotifier {
   }
 
   Future<bool> _verificarNaApiSeHaUsuarioComCrendenciaisInformadas(
-      String cpf, DateTime birthday) async {
+    String cpf,
+    DateTime birthday,
+  ) async {
     // Formata o CPF para remover caracteres especiais
     String cpfFormatado = cpf.replaceAll(RegExp(r'[^0-9]'), '');
 
-    final uri =
-        Uri.parse('${await ApiUtils.baseUrl}/Auth/Login?cpf=$cpfFormatado');
+    final uri = Uri.parse(
+        '${await ApiUtils.baseUrl}/Auth/Login?cpf=$cpfFormatado&dt_nascimento=${birthday.year}-${birthday.month}-${birthday.day}');
 
     // Realiza a solicitação POST
     final response = await http.post(
       uri,
-      headers: {'Accept': 'application/json'},
+      headers: {'accept': 'application/json'},
       body: '', // Envia o corpo da solicitação vazio
     );
 
     // Verifica a resposta
     if (response.statusCode == 200) {
-      final responseBody =
-          response.body.trim(); // Remove espaços em branco desnecessários
-      if (responseBody == '"Autorizado"') {
+      bool allowLogin = bool.parse(response.body);
+      if (allowLogin) {
         return Future.value(true); // Usuário autorizado
-      } else if (responseBody == '"Negado"') {
+      } else if (allowLogin) {
         return Future.value(false); // Usuário não autorizado
       } else {
-        debugPrint('Resposta inesperada: $responseBody');
+        debugPrint('Resposta inesperada: $allowLogin');
         throw Exception('Erro ao verificar credenciais');
       }
     } else {

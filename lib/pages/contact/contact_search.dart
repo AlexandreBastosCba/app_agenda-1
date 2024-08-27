@@ -49,16 +49,19 @@ class _ContactSearchState extends State<ContactSearch> {
     }).toList();
 
     // Atualiza a variável com a lista filtrada
-    setState(() {
-      _actualContacts = Future.value(filteredContacts);
-    });
+    setState(
+      () {
+        _actualContacts = Future.value(filteredContacts);
+      },
+    );
   }
 
   Container defaultContainer({required Widget child}) {
     return Container(
-        alignment: Alignment.center,
-        margin: const EdgeInsets.only(top: 40),
-        child: child);
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(top: 40),
+      child: child,
+    );
   }
 
   @override
@@ -75,7 +78,10 @@ class _ContactSearchState extends State<ContactSearch> {
           gap,
           Container(
             alignment: Alignment.centerLeft,
-            child: Text('Contatos', style: CSTextSyles.largeTitle(context)),
+            child: Text(
+              'Contatos',
+              style: CSTextSyles.largeTitle(context),
+            ),
           ),
           gap,
           CSSearchBar(onQueryChanged: onQueryChanged),
@@ -142,7 +148,8 @@ class _ContactSearchState extends State<ContactSearch> {
                                   style: CSTextSyles.alertText(context),
                                 ),
                                 Text(
-                                  "(${contact.telefone.substring(0, 2)}) ${contact.telefone.substring(2, 7)}-${contact.telefone.substring(7, 11)}",
+                                  // "(${contact.telefone.substring(0, 2)}) ${contact.telefone.substring(2, 7)}-${contact.telefone.substring(7, 11)}",
+                                  contact.telefone,
                                   style: CSTextSyles.alertText(context),
                                 ),
                                 Text(

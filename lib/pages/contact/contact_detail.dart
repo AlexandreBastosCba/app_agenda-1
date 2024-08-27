@@ -46,13 +46,17 @@ class _ContactDetailState extends State<ContactDetail> {
           _buildCard('Nome', widget.contact.nome),
           _buildCard(
             'Telefone',
-            UtilBrasilFields.obterTelefone(widget.contact.telefone),
+            // UtilBrasilFields.obterTelefone(widget.contact.telefone),
+            widget.contact.telefone,
           ),
           _buildCard(
             'Lotação',
             '${widget.contact.departamento} - ${widget.contact.sigla}',
           ),
-          _buildCard('Membro desde', ''),
+          _buildCard(
+            'Membro desde',
+            UtilData.obterDataDDMMAAAA(widget.contact.dtMembro),
+          ),
           // _buildCard('CPF', _formatCpf(widget.contact.cpf)),
           _buildCard(
             'Aniversário',

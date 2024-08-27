@@ -3,6 +3,7 @@ class Contact {
   final String cpf;
   final String nome;
   final DateTime dtNascimento;
+  final DateTime dtMembro;
   final String telefone;
   final int idLotacao;
   final String departamento;
@@ -13,6 +14,7 @@ class Contact {
     required this.cpf,
     required this.nome,
     required this.dtNascimento,
+    required this.dtMembro,
     required this.telefone,
     required this.idLotacao,
     required this.departamento,
@@ -25,6 +27,7 @@ class Contact {
       cpf: json['cpf'],
       nome: json['nome'],
       dtNascimento: DateTime.parse(json['dt_nascimento']),
+      dtMembro: DateTime.parse(json['dt_membro']),
       telefone: json['telefone'],
       idLotacao: json['id_lotacao'],
       departamento: json['departamento'],
