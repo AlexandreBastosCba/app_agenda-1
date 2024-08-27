@@ -43,7 +43,10 @@ class _ContactDetailState extends State<ContactDetail> {
               ],
             ),
           ),
-          _buildCard('Nome', widget.contact.nome),
+          _buildCard(
+            'Nome',
+            widget.contact.nome,
+          ),
           _buildCard(
             'Telefone',
             // UtilBrasilFields.obterTelefone(widget.contact.telefone),
@@ -61,6 +64,7 @@ class _ContactDetailState extends State<ContactDetail> {
           _buildCard(
             'Aniversário',
             UtilData.obterDataDDMM(widget.contact.dtNascimento),
+            trailingIcon: Icons.cake,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -119,18 +123,26 @@ class _ContactDetailState extends State<ContactDetail> {
     return formatter.format(date);
   }
 
-  Widget _buildCard(String title, String content) {
+  Widget _buildCard(String title, String content, {IconData? trailingIcon}) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(
+        vertical: 8.0,
+        horizontal: 50,
+      ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(
           vertical: 8.0,
           horizontal: 16.0,
         ),
+        enabled: false,
         onTap: () {},
         title: Text(
           title,
           style: Theme.of(context).textTheme.labelLarge,
+        ),
+        trailing: Icon(
+          trailingIcon,
+          size: 50,
         ),
         subtitle: Text(
           content,
