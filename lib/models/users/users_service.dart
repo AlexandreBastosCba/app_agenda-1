@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:app_agenda/util/api/api_utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:brasil_fields/brasil_fields.dart';
@@ -26,7 +25,8 @@ class UsersServices extends ChangeNotifier {
 
   Future<bool> signIn(String cpf, DateTime birthday) async {
     try {
-      if (await _verificarNaApiSeHaUsuarioComCrendenciaisInformadas(cpf, birthday)) {
+      if (await _verificarNaApiSeHaUsuarioComCrendenciaisInformadas(
+          cpf, birthday)) {
         Users users = Users(cpf: cpf, birthday: birthday);
         _setarUsuarioNoArmanezamentoLocal(users);
         _loadCurrentUser();
@@ -39,29 +39,31 @@ class UsersServices extends ChangeNotifier {
   }
 
   Future<bool> _verificarNaApiSeHaUsuarioComCrendenciaisInformadas(
-      String cpf, DateTime birthday) async {
+    String cpf,
+    DateTime birthday,
+  ) async {
     // Formata o CPF para remover caracteres especiais
     String cpfFormatado = cpf.replaceAll(RegExp(r'[^0-9]'), '');
 
-    final uri = Uri.parse('${await ApiUtils.baseUrl}/Auth/Login?cpf=$cpfFormatado');
+    final uri = Uri.parse(
+        '${await ApiUtils.baseUrl}/Auth/Login?cpf=$cpfFormatado&dt_nascimento=${birthday.year}-${birthday.month}-${birthday.day}');
 
     // Realiza a solicitação POST
     final response = await http.post(
       uri,
-      headers: {'Accept': 'application/json'},
+      headers: {'accept': 'application/json'},
       body: '', // Envia o corpo da solicitação vazio
     );
 
     // Verifica a resposta
     if (response.statusCode == 200) {
-      final responseBody =
-          response.body.trim(); // Remove espaços em branco desnecessários
-      if (responseBody == '"Autorizado"') {
+      bool allowLogin = bool.parse(response.body);
+      if (allowLogin) {
         return Future.value(true); // Usuário autorizado
-      } else if (responseBody == '"Negado"') {
+      } else if (allowLogin) {
         return Future.value(false); // Usuário não autorizado
       } else {
-        debugPrint('Resposta inesperada: $responseBody');
+        debugPrint('Resposta inesperada: $allowLogin');
         throw Exception('Erro ao verificar credenciais');
       }
     } else {
@@ -122,7 +124,7 @@ class UsersServices extends ChangeNotifier {
   static String? validateCpf(String? cpf) {
     if (cpf == null || cpf.isEmpty) {
       return 'Por favor, insira um CPF válido.';
-    } 
+    }
     // else if (!CPFValidator.isValid(cpf)) {
     //   return 'CPF inválido';
     // }
