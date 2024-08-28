@@ -1,5 +1,6 @@
 import 'package:app_agenda/models/contact/contact.dart';
 import 'package:app_agenda/models/contact/contact_service.dart';
+import 'package:app_agenda/models/contact/lotacao.dart';
 import 'package:app_agenda/pages/contact/contact_detail.dart';
 import 'package:app_agenda/pages/main/main_page.dart';
 import 'package:app_agenda/util/responsive/responsive.dart';
@@ -16,31 +17,51 @@ class ContactSearch extends StatefulWidget {
 }
 
 class _ContactSearchState extends State<ContactSearch> {
+  final TextEditingController _textEditingController = TextEditingController();
   final ContactService _contactService = ContactService();
   late Future<List<Contact>> _initialContactsFuture;
+  late Future<List<Lotacao>> _lotacaoFuture;
+  late Future<List<Contact>> _baseContactsList;
   late Future<List<Contact>> _actualContacts;
+
+  List<String> _list = <String>[''];
+  String? _dropdownValue;
+  bool _filterLotacao = false;
 
   @override
   void initState() {
     super.initState();
     _initialContactsFuture = _contactService.getContacts();
+    _baseContactsList = _initialContactsFuture;
     _actualContacts = _initialContactsFuture;
+    _lotacaoFuture = _contactService.getLotacoes();
+    defineListLotacaoDropdown();
+  }
+
+  void defineListLotacaoDropdown() async {
+    List<Lotacao> lotacaoList = await _lotacaoFuture;
+
+    setState(() {
+      _list = lotacaoList.map((lotacao) => lotacao.departamento).toList();
+      if (_list.isNotEmpty) {
+        _dropdownValue = _list.first;
+      }
+    });
   }
 
   void onQueryChanged(String query) {
-    setState(() {
-      if (query.isEmpty || query.trim().isEmpty) {
-        _actualContacts = _initialContactsFuture;
-        return;
-      }
-    });
-
-    filterContacts(query);
+    if (query.isEmpty || query.trim().isEmpty) {
+      setState(() {
+        _actualContacts = _baseContactsList;
+      });
+    } else {
+      filterContacts(query);
+    }
   }
 
   Future<void> filterContacts(String query) async {
     // Obtém a lista atual de contatos
-    List<Contact> contacts = await _actualContacts;
+    List<Contact> contacts = await _baseContactsList;
 
     // Filtra os contatos que contêm a substring fornecida no nome
     List<Contact> filteredContacts = contacts.where((contact) {
@@ -54,6 +75,35 @@ class _ContactSearchState extends State<ContactSearch> {
         _actualContacts = Future.value(filteredContacts);
       },
     );
+  }
+
+  Future<void> filterContactsByLotacao({String? lotacao}) async {
+    // Obtém a lista inicial de contatos
+    List<Contact> contacts = await _initialContactsFuture;
+
+    // Filtra os contatos que contêm a lotação
+    List<Contact> filteredContacts = contacts.where((contact) {
+      // Converte o nome para minúsculas e verifica se a substring está presente
+      return contact.departamento
+          .toLowerCase()
+          .contains(lotacao!.toLowerCase());
+    }).toList();
+
+    // Atualiza a lista de contatos com a lista filtrada
+    setState(
+      () {
+        _baseContactsList = Future.value(filteredContacts);
+      },
+    );
+    onQueryChanged(_textEditingController.text);
+  }
+
+  void refreshBaseList() async {
+    List<Contact> contacts = await _initialContactsFuture;
+    setState(() {
+      _baseContactsList = Future.value(contacts);
+    });
+    onQueryChanged(_textEditingController.text);
   }
 
   Container defaultContainer({required Widget child}) {
@@ -84,7 +134,54 @@ class _ContactSearchState extends State<ContactSearch> {
             ),
           ),
           gap,
-          CSSearchBar(onQueryChanged: onQueryChanged),
+          CSSearchBar(
+            onQueryChanged: onQueryChanged,
+            textEditingController: _textEditingController,
+          ),
+          gap,
+          Row(
+            children: [
+              DropdownMenu<String>(
+                leadingIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _filterLotacao = !_filterLotacao;
+                    });
+                    if (_filterLotacao) {
+                      filterContactsByLotacao(
+                        lotacao: _dropdownValue,
+                      );
+                    } else {
+                      refreshBaseList();
+                    }
+                  },
+                  icon: _filterLotacao
+                      ? const Icon(Icons.filter_alt_off)
+                      : const Icon(Icons.filter_alt),
+                ),
+                label: const Text('Lotação'),
+                width: 190,
+                initialSelection: _dropdownValue,
+                onSelected: (String? value) {
+                  // This is called when the user selects an item.
+                  if (_filterLotacao) {
+                    filterContactsByLotacao(lotacao: _dropdownValue);
+                  }
+                  setState(() {
+                    _dropdownValue = value!;
+                  });
+                },
+                dropdownMenuEntries: _list.map<DropdownMenuEntry<String>>(
+                  (String value) {
+                    return DropdownMenuEntry<String>(
+                      value: value,
+                      label: value,
+                    );
+                  },
+                ).toList(),
+              ),
+            ],
+          ),
           FutureBuilder<List<Contact>>(
             future: _actualContacts,
             builder: (context, snapshot) {
