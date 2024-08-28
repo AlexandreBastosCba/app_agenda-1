@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:app_agenda/util/api/api_utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:brasil_fields/brasil_fields.dart';
@@ -58,14 +57,13 @@ class UsersServices extends ChangeNotifier {
 
     // Verifica a resposta
     if (response.statusCode == 200) {
-      final responseBody =
-          bool.parse(response.body); // Remove espaços em branco desnecessários
-      if (responseBody) {
+      bool allowLogin = bool.parse(response.body);
+      if (allowLogin) {
         return Future.value(true); // Usuário autorizado
-      } else if (responseBody) {
+      } else if (allowLogin) {
         return Future.value(false); // Usuário não autorizado
       } else {
-        debugPrint('Resposta inesperada: $responseBody');
+        debugPrint('Resposta inesperada: $allowLogin');
         throw Exception('Erro ao verificar credenciais');
       }
     } else {
