@@ -163,13 +163,13 @@ class _ContactSearchState extends State<ContactSearch> {
                 width: 190,
                 initialSelection: _dropdownValue,
                 onSelected: (String? value) {
+                  setState(() {
+                    _dropdownValue = value!;
+                  });
                   // This is called when the user selects an item.
                   if (_filterLotacao) {
                     filterContactsByLotacao(lotacao: _dropdownValue);
                   }
-                  setState(() {
-                    _dropdownValue = value!;
-                  });
                 },
                 dropdownMenuEntries: _list.map<DropdownMenuEntry<String>>(
                   (String value) {
