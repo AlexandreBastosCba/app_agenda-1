@@ -11,7 +11,12 @@ class ContactService {
       final uri =
           Uri.parse('${await ApiUtils.baseUrl}/Contatos/GetListaContatos');
 
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          "x-hash": "0891e0f9547b3f2b51568ecafecb4d50",
+        },
+      );
       if (response.statusCode == 200) {
         List<dynamic> jsonList = json.decode(response.body);
         return jsonList.map((json) => Contact.fromJson(json)).toList();
@@ -29,7 +34,12 @@ class ContactService {
       final uri =
           Uri.parse('${await ApiUtils.baseUrl}/Lotacoes/GetListaLotacoes');
 
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          "x-hash": "0891e0f9547b3f2b51568ecafecb4d50",
+        },
+      );
       if (response.statusCode == 200) {
         List<dynamic> jsonList = json.decode(response.body);
         return jsonList.map((json) => Lotacao.fromJson(json)).toList();

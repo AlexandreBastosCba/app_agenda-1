@@ -51,7 +51,10 @@ class UsersServices extends ChangeNotifier {
     // Realiza a solicitação POST
     final response = await http.post(
       uri,
-      headers: {'accept': 'application/json'},
+      headers: {
+        'accept': 'application/json',
+        'x-hash': '0891e0f9547b3f2b51568ecafecb4d50',
+      },
       body: '', // Envia o corpo da solicitação vazio
     );
 
