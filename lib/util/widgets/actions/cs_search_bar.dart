@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 class CSSearchBar extends StatefulWidget {
   final void Function(String)? onQueryChanged;
+  final TextEditingController? textEditingController;
 
   const CSSearchBar({
     this.onQueryChanged,
+    this.textEditingController,
     super.key,
   });
 
@@ -29,6 +31,7 @@ class _CSSearchBarState extends State<CSSearchBar> {
       padding: const EdgeInsets.all(0),
       height: 45,
       child: TextField(
+        controller: widget.textEditingController,
         onChanged: onQueryChanged,
         decoration: const InputDecoration(
           labelText: 'Buscar',
